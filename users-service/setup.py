@@ -12,6 +12,7 @@ setup(
         "alembic==0.9.1",
         "nameko==2.12.0",
         "nameko-autocrud==0.1.1",
+        "nameko-sqlalchemy==1.5.0",
         "mysql-connector-python==2.0.4",
         "pyjwt==1.5.2",
         "sqlalchemy-utils==0.32.19",
