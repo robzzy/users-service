@@ -31,7 +31,7 @@ class UsersService:
         user = query.filter(Users.uuid == uuid).first()
 
         if not user:
-            raise UserNotFound()
+            raise UserNotFound(f"User do not exists.")
 
         return UserSchema().dump(user).data
 
