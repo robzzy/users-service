@@ -2,3 +2,37 @@ DB_URIS:
     "users:Base": mysql+mysqlconnector://${DB_USER:root}:${DB_PASSWORD:}@${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:users}
 
 AMQP_URI: amqp://${RABBIT_USER:guest}:${RABBIT_PASSWORD:guest}@${RABBIT_HOST:localhost}:${RABBIT_PORT:5672}/
+
+
+LOGGING:
+    version: 1
+    disable_exsiting_loggers: False
+    filters:
+        truncate_request_trace:
+            (): nameko_tracer.filters.TruncateCallArgsFilter
+        truncate_response_trace:
+            (): nameko_tracer.filters.TruncateResponseFilter
+    formatters:
+        default:
+            format: "%(asctime)-15s [%(levelname)-4s] [users-service] [%(name)-12s] %(message)s"
+        tracer:
+            (): nameko_tracer.formatters.JSONFormatter
+    handlers:
+        default:
+            level: INFO
+            formatter: default
+            class: logging.StreamHandler
+        tracer:
+            class: logging.StreamHandler
+            formatter: tracer
+    loggers:
+        nameko_tracer:
+            level: INFO
+            handlers: [tracer]
+            filters:
+                - truncate_request_trace
+                - truncate_response_trace
+    root:
+        level: INFO
+        propagate: True
+        handlers: [default]
