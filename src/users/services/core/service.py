@@ -2,7 +2,6 @@ import json
 
 from nameko.rpc import rpc
 from nameko_tracer import Tracer
-from nameko.events import EventDispatcher
 from nameko_sqlalchemy import DatabaseSession
 
 from users.models import DeclarativeBase, Users
@@ -15,7 +14,6 @@ class UsersService:
     name = "users"
 
     tracer = Tracer()
-    event_dispatch = EventDispatcher()
     db = DatabaseSession(DeclarativeBase)
 
     @rpc
