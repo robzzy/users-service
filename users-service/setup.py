@@ -22,7 +22,7 @@ setup(
     extras_require={
         "dev": [
             "coverage==4.2.0",
-            "flake8==3.2.1",
+            "flake8>=3.7.7",
             "pytest==3.0.7",
             "behave==1.2.5",
         ],

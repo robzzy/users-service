@@ -35,7 +35,7 @@ class TestUsersService:
 
     def test_get_use_when_user_not_found(self, users_service, created_user):
 
-        with pytest.raises(UserNotFound) as err:
+        with pytest.raises(UserNotFound):
             users_service.get_user(uuid="user_not_exists")
 
     def test_update_user(self, users_service, created_user, db_session):
