@@ -3,7 +3,7 @@ TAG ?= dev
 IMAGES :=  users-service
 
 install-dependencies:
-	pip install -U -e "users-service/.[dev]"
+	pip install -U -e ".[dev]"
 
 
 # test
@@ -14,9 +14,7 @@ coverage-report:
 	coverage report -m
 
 test:
-	flake8 users-service/src users-service/test
-	coverage run -m pytest users-service $(ARGS)
+	flake8 src test
+	coverage run -m pytest test $(ARGS)
 
 coverage: test coverage-report coverage-html
-
-

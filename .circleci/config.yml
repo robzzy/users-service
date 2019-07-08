@@ -15,7 +15,7 @@ jobs:
           name: Install dependencies
           command: |
             sudo pip install -U pip wheel setuptools
-            sudo pip install -U users-service/[dev]
+            sudo pip install -U -e ".[dev]"
 
       - run:
           name: Run tests
