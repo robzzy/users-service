@@ -53,9 +53,11 @@ class TestUsersService:
         with pytest.raises(UserNotFound):
             users_service.update_user(1, {"uuid": "mock_uuid"})
 
-    def test_create_user(self, users_service, db_session, create_user):
+    def test_create_user(self, users_service, db_session):
 
-        create_user()
+        user_data = {"email": "1", "password": 1, "phone": "1"}
+
+        users_service.create_user(data=user_data)
 
         assert len(db_session.query(Users).all()) == 1
 
