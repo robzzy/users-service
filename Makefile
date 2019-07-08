@@ -7,14 +7,14 @@ install-dependencies:
 
 
 # test
-coverage-html:
+coverage-html: test
 	coverage html -d $(HTMLCOV_DIR) --fail-under 100
 
-coverage-report:
+coverage-report: test
 	coverage report -m
 
 test:
 	flake8 src test
-	coverage run -m pytest test $(ARGS)
+	coverage run --source=users -m pytest test $(ARGS)
 
 coverage: test coverage-report coverage-html
