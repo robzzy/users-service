@@ -4,6 +4,9 @@ jobs:
     docker:
       - image: circleci/python:3.7.3-stretch
       - image: rabbitmq:3.7-management
+      - image: circleci/mysql:5.6.36
+        environment:
+          MYSQL_DATABASE: demo
 
     steps:
       - checkout
