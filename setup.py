@@ -6,7 +6,7 @@ setup(
     name="users",
     version="0.0.1",
     description="Manage users",
-    packages=find_packages("src", exclude=["test"]),
+    packages=find_packages("src", exclude=["test", "test.*", "db"]),
     package_dir={"": "src"},
     install_requires=[
         "alembic==1.0.10",
