@@ -1,7 +1,7 @@
 DB_URIS:
-    "users:Base": mysql+mysqlconnector://${DB_USER:root}:${DB_PASSWORD:}@${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:users}
+    "users:Base": mysql+mysqlconnector://${DB_USER:root}:${DB_PASSWORD:}@${DB_SERVER:localhost}/${DB_NAME:users}
 
-AMQP_URI: amqp://${RABBIT_USER:guest}:${RABBIT_PASSWORD:guest}@${RABBIT_HOST:localhost}:${RABBIT_PORT:5672}/
+AMQP_URI: amqp://${RABBIT_USER:guest}:${RABBIT_PASS:guest}@${RABBIT_SERVER:localhost}:${RABBIT_PORT:5672}/${RABBIT_VHOST:}
 
 
 LOGGING:

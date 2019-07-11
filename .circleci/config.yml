@@ -30,6 +30,10 @@ jobs:
 
 workflows:
   version: 2
-  main-workflow:
+  all-workflows:
     jobs:
-      - test
+      - test_approval:
+        type: approval
+      - test:
+        requires:
+          - test_approval
