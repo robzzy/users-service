@@ -33,7 +33,7 @@ workflows:
   all-workflows:
     jobs:
       - test_approval:
-        type: approval
+          type: approval
       - test:
-        requires:
-          - test_approval
+          requires:
+            - test_approval
