@@ -76,7 +76,7 @@ test-chart:
 install-chart:
 	helm upgrade users-service deploy/k8s/charts/$(SERVICE_NAME) --install \
 	--namespace=$(NAMESPACE) --kube-context $(CONTEXT) \
-	--set image.tage=$(TAG)
+	--set image.tag=$(TAG)
 
 lint-chart:
 	helm lint deploy/k8s/charts/$(SERVICE_NAME) --strict

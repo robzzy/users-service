@@ -30,10 +30,7 @@ spec:
             - name: RABBITMANAGEMENT_PORT
               value: "15672"
             - name: RABBIT_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: guest-rabbitmq
-                  key: rabbitmq-password
+              value: guest
             - name: DB_SERVER
               value: root-mysql
             - name: DB_USER
@@ -42,7 +39,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: root-mysql
-                  key: mysql-password
+                  key: mysql-root-password
             - name: DB_NAME
               value: users
               
