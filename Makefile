@@ -32,7 +32,7 @@ coverage: test coverage-report coverage-html
 # docker
 
 docker-login:
-	docker login --password=$(DOCKER_PASSWORD) --username=$(DOCKER_USERNAME)
+	echo $$DOCKER_PASSWORD | docker login --username=$(DOCKER_USERNAME) --password-stdin
 
 build-base:
 	docker build --target base -t service-base .;
