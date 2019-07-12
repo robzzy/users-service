@@ -45,7 +45,7 @@ jobs:
           paths:
             - users-services.tar
 
-  push-images:
+  push_images:
     docker:
       - image: circleci/python:3.7.3-strech
     
@@ -74,14 +74,14 @@ workflows:
       - test:
           requires:
             - test_approval
-      - docker-approval:
+      - docker_approval:
           type: approval
-      - build-images:
+      - build_images:
           requires:
-            - docker-approval
-      - upload-images:
+            - docker_approval
+      - push_images:
           requires:
-            - build-images
+            - build_images
           filters:
             branches:
               only: master
