@@ -29,7 +29,7 @@ jobs:
   
   build_images:
     docker:
-      - image: circileci/python:3.7.3-stretch
+      - image: circleci/python:3.7.3-stretch
     
     steps:
       - checkout
@@ -47,7 +47,7 @@ jobs:
 
   push_images:
     docker:
-      - image: circleci/python:3.7.3-strech
+      - image: circleci/python:3.7.3-stretch
     
     steps:
       - checkout
