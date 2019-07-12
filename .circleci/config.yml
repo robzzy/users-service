@@ -26,6 +26,43 @@ jobs:
       - store_artifacts:
           path: /tmp/coverage-html
           destination: coverage-html
+  
+  build_images:
+    docker:
+      - image: circileci/python:3.7.3-stretch
+    
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - run:
+        name: Build docker images
+        command: |
+          make build docker-save
+      
+      - persist_to_workspace:
+          root: docker-images
+          paths:
+            - users-services.tar
+
+  push-images:
+    docker:
+      - image: circleci/python:3.7.3-strech
+    
+    steps:
+      - checkout
+      - setup_remote_docker
+
+      - attach_workspace:
+        at: docker-images
+      
+      - run:
+        name: Push docker images
+        command: |
+          make docker-login
+          make docker-load
+          make docker-tag
+          make push-images
 
 
 workflows:
@@ -37,3 +74,14 @@ workflows:
       - test:
           requires:
             - test_approval
+      - docker-appoval:
+          type: approval
+      - build-images:
+          requires:
+            - docker-approval
+      - upload-images:
+          requires:
+            - build-images
+          filters:
+            branches:
+              only: master

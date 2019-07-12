@@ -18,10 +18,6 @@ RUN mkdir /var/nameko/ && chown -R nameko:nameko /var/nameko/
 
 FROM service-base as builder
 
-RUN apt-get update && \
-    apt-get install --yes build-essential autoconf libtool pkg-config \
-    libgflags-dev libgtest-dev clang libc++-dev automake git libpq-dev
-
 RUN pip install auditwheel
 
 COPY . /application

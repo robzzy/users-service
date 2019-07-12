@@ -1,2 +1,17 @@
 .PHONY: etc
 
+ENV ?= default
+TAG ?= $(shell git rev-parse HEAD)
+REMOTE_DOCKER_HOST ?= zengzhiyuan
+
+
+# docker 
+
+build-image:
+	docker build -t users-service-$(COMPONENT):$(TAG) .;
+
+docker-tag:
+	docker tag users-service-$(COMPONENT):$(TAG) $(REMOTE_DOCKER_HOST)/users-service-$(COMPONENT):$(TAG)
+
+docker-push:
+	docker push $(REMOTE_DOCKER_HOST)/users-service-$(COMPONENT):$(TAG)
