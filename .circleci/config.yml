@@ -54,7 +54,7 @@ jobs:
       - setup_remote_docker
 
       - attach_workspace:
-        at: docker-images
+          at: docker-images
       
       - run:
           name: Push docker images
