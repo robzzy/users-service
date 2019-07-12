@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Users Service K8s Chart
+name: users-service
+version: 0.1.0

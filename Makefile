@@ -11,6 +11,11 @@ SERVICES := core
 HTMLCOV_DIR ?= htmlcov
 IMAGES :=  $(SERVICES)
 
+CONTEXT ?= david.k8s.local
+NAMESPACE ?= demo
+SERVICE_NAME ?= users-service
+
+
 install-dependencies:
 	pip install -U -e ".[dev]"
 
@@ -54,3 +59,24 @@ docker-tag:
 push-images:
 	for image in $(IMAGES) ; do make -C deploy/$$image docker-push; done
 
+
+# k8s
+
+deploy-namespace:
+	kubectl --context=$(CONTEXT) apply -f deploy/k8s/namespace.yaml
+
+
+# helm
+
+test-chart:
+	helm upgrade users-service deploy/k8s/charts/$(SERVICE_NAME) --install \
+	--namespace=$(NAMESPACE) --kube-context $(CONTEXT) \
+	--dry-run --debug --set image.tag=$(TAG)
+
+install-chart:
+	helm upgrade users-service deploy/k8s/charts/$(SERVICE_NAME) --install \
+	--namespace=$(NAMESPACE) --kube-context $(CONTEXT) \
+	--set image.tage=$(TAG)
+
+lint-chart:
+	helm lint deploy/k8s/charts/$(SERVICE_NAME) --strict
