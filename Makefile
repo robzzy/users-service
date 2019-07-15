@@ -29,7 +29,7 @@ coverage-report:
 
 test:
 	flake8 src test
-	coverage run --source=users -m pytest test $(ARGS)
+	coverage run --concurrency=eventlet --source=users -m pytest test $(ARGS)
 
 coverage: test coverage-report coverage-html
 
