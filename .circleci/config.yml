@@ -72,6 +72,8 @@ workflows:
       - test
       - docker_approval:
           type: approval
+          requires:
+            - test
       - build_images:
           requires:
             - docker_approval
