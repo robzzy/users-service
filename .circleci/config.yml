@@ -69,11 +69,7 @@ workflows:
   version: 2
   all-workflows:
     jobs:
-      - test_approval:
-          type: approval
-      - test:
-          requires:
-            - test_approval
+      - test
       - docker_approval:
           type: approval
       - build_images:
