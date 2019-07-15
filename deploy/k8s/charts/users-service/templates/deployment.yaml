@@ -22,7 +22,7 @@ spec:
           name: {{ .Chart.Name }}
           env:
             - name: RABBIT_USER
-              value: guest
+              value: user
             - name: RABBIT_SERVER
               value: guest-rabbitmq
             - name: RABBIT_PORT
@@ -30,7 +30,10 @@ spec:
             - name: RABBITMANAGEMENT_PORT
               value: "15672"
             - name: RABBIT_PASS
-              value: guest
+              valueFrom:
+                secretKeyRef:
+                  name: guest-rabbitmq
+                  key: rabbitmq-password
             - name: DB_SERVER
               value: root-mysql
             - name: DB_USER
