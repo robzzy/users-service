@@ -16,6 +16,7 @@ setup(
         "mysql-connector-python==8.0.16",
         "pyjwt==1.5.2",
         "marshmallow==2.19.5",
+        "sqlalchemy_filters==0.10.0",
     ],
     extras_require={
         "dev": [
