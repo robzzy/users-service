@@ -22,9 +22,9 @@ class TestUsersService:
 
     def test_health_check(self, users_service):
 
-        response = users_service.health_check()
+        response = users_service.health_check("request")
 
-        assert response == '{"status": "succeeded"}'
+        assert response == '{"status": "ok"}'
 
     def test_get_user(self, users_service, created_user):
 
@@ -68,3 +68,43 @@ class TestUsersService:
         users_service.delete_user(1)
 
         assert len(db_session.query(Users).all()) == 0
+
+    def test_list_users(self, users_service, db_session):
+
+        user_1 = {
+            "email": "demo1@test.com",
+            "phone": "mock_phone",
+            "password": "mock_password",
+            "email_verified": False,
+            "uuid": "mock_uuid",
+            "enabled": False
+            }
+        user_2 = user_1.copy()
+        user_2.update({"uuid": "2", "email": "demo2@test.com"})
+
+        db_session.add(Users(**user_1))
+        db_session.add(Users(**user_2))
+        db_session.commit()
+
+        users = users_service.list_users(
+            filters={"field": "phone", "op": "==", "value": "mock_phone"},
+            order_by={"field": "id", "direction": "desc"},
+            limit=10
+        )
+
+        assert users == [
+            {
+                "email": "demo2@test.com",
+                "phone": "mock_phone",
+                "password": "mock_password",
+                "email_verified": False,
+                "enabled": False
+            },
+            {
+                "email": "demo1@test.com",
+                "phone": "mock_phone",
+                "password": "mock_password",
+                "email_verified": False,
+                "enabled": False
+            }
+        ]

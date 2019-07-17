@@ -3,6 +3,8 @@ import json
 from nameko.rpc import rpc
 from nameko_tracer import Tracer
 from nameko_sqlalchemy import DatabaseSession
+from sqlalchemy_filters import apply_filters, apply_sort
+from nameko.web.handlers import http
 
 from users.models import DeclarativeBase, Users
 from users.schemas import UserSchema
@@ -16,11 +18,9 @@ class UsersService:
     tracer = Tracer()
     db = DatabaseSession(DeclarativeBase)
 
-    @rpc
-    def health_check(self):
-        return json.dumps({
-            "status": "succeeded"
-        })
+    @http("GET", "/healthcheck")
+    def health_check(self, request):
+        return json.dumps({"status": "ok"})
 
     @rpc(expected_exceptions=(UserNotFound,))
     def get_user(self, uuid):
@@ -69,3 +69,16 @@ class UsersService:
 
         self.db.delete(user)
         self.db.commit()
+
+    @rpc
+    def list_users(self, filters=None, limit=None, order_by=None):
+        query = self.db.query(Users)
+        if filters:
+            query = apply_filters(query, filters)
+        if order_by:
+            query = apply_sort(query, order_by)
+        if limit:
+            query = query.limit(limit)
+        query = query.all()
+
+        return [UserSchema().dump(user).data for user in query]
