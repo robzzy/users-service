@@ -1,0 +1,39 @@
+{{ if .Values.run_migrations }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ .Chart.Name }}"-migrations
+  labels:
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+    tag: {{ .Values.image.tag }}
+    name: {{ .Release.Name }}-migrations-job
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-rollback
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"-migrations-job
+      labels:
+        release: {{ .Release.Name }}
+        chart: {{ .Chart.Name }}
+        tag: {{ .Values.image.tag }}
+    spec:
+      restartPolicy: Never
+      containers:
+        - image: zengzhiyuan/users-service-migrations:{{ .Values.image.tag }}
+          name: "{{ .Chart.Name }}"-migrations
+          env:
+            - name: DB_SERVER
+              value: root-mysql
+            - name: DB_USER
+              value: root
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: root-mysql
+                  key: mysql-root-password
+            - name: DB_NAME
+              value: users
+  {{ end }}

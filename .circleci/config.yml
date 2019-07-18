@@ -26,6 +26,17 @@ jobs:
       - store_artifacts:
           path: /tmp/coverage-html
           destination: coverage-html
+
+      - run:
+          name: Export db_revision
+          command: |
+            mkdir ~/project/current-db
+            pushd deploy/migrations; echo $(alembic heads) | cut -d ' ' -f 1 > ~/project/current-db/db_revision.txt;popd
+
+      - persist_to_workspace:
+          root: current-db
+          paths:
+            - db_revision.txt
   
   build_images:
     docker:
@@ -43,7 +54,7 @@ jobs:
       - persist_to_workspace:
           root: docker-images
           paths:
-            - users-services.tar
+            - users-service.tar
 
   push_images:
     docker:
@@ -80,6 +91,3 @@ workflows:
       - push_images:
           requires:
             - build_images
-          filters:
-            branches:
-              only: master

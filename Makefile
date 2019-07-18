@@ -9,7 +9,7 @@ endif
 
 SERVICES := core
 HTMLCOV_DIR ?= htmlcov
-IMAGES :=  $(SERVICES)
+IMAGES := $(SERVICES) migrations
 
 CONTEXT ?= david.k8s.local
 NAMESPACE ?= demo
@@ -48,10 +48,10 @@ build: build-base
 
 docker-save:
 	mkdir -p docker-images
-	docker save -o docker-images/users-services.tar $(foreach image, $(IMAGES), users-service-$(image):$(TAG))
+	docker save -o docker-images/users-service.tar $(foreach image, $(IMAGES), users-service-$(image):$(TAG))
 
 docker-load:
-	docker load -i docker-images/users-services.tar
+	docker load -i docker-images/users-service.tar
 
 docker-tag:
 	for image in $(IMAGES) ; do make -C deploy/$$image docker-tag; done
@@ -76,7 +76,9 @@ test-chart:
 install-chart:
 	helm upgrade users-service deploy/k8s/charts/$(SERVICE_NAME) --install \
 	--namespace=$(NAMESPACE) --kube-context $(CONTEXT) \
-	--set image.tag=$(TAG)
+	--set image.tag=$(TAG) \
+	--set run_migrations=$(RUN_MIGRATIONS) \
+	--set db_revision=$(DB_REVISION);
 
 lint-chart:
 	helm lint deploy/k8s/charts/$(SERVICE_NAME) --strict

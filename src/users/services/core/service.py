@@ -71,14 +71,16 @@ class UsersService:
         self.db.commit()
 
     @rpc
-    def list_users(self, filters=None, limit=None, order_by=None):
+    def list_users(self, filters=None, limit=None, offset=None, order_by=None):
         query = self.db.query(Users)
         if filters:
             query = apply_filters(query, filters)
         if order_by:
             query = apply_sort(query, order_by)
+        if offset:
+            query = query.offset(offset)
         if limit:
             query = query.limit(limit)
         query = query.all()
 
-        return [UserSchema().dump(user).data for user in query]
+        return UserSchema(many=True).dump(query).data

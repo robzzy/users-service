@@ -1,4 +1,3 @@
-
 .PHONY: etc
 
 COMPONENT := core

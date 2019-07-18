@@ -89,7 +89,8 @@ class TestUsersService:
         users = users_service.list_users(
             filters={"field": "phone", "op": "==", "value": "mock_phone"},
             order_by={"field": "id", "direction": "desc"},
-            limit=10
+            offset="0",
+            limit=10,
         )
 
         assert users == [
