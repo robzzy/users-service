@@ -82,3 +82,8 @@ install-chart:
 
 lint-chart:
 	helm lint deploy/k8s/charts/$(SERVICE_NAME) --strict
+
+initial-cluster: deploy-namespace
+	helm --kube-context=$(CONTEXT) install --name guest --namespace demo stable/rabbitmq
+	helm --kube-context=$(CONTEXT) install --name root --namespace demo stable/mysql --set mysqlDatabase=users
+
