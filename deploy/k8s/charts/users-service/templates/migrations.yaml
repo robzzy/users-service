@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "{{ .Chart.Name }}"-migrations
+  name: {{ .Chart.Name }}-migrations
   labels:
     release: {{ .Release.Name }}
     chart: {{ .Chart.Name }}
@@ -14,7 +14,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: "{{ .Release.Name }}"-migrations-job
+      name: {{ .Release.Name }}-migrations-job
       labels:
         release: {{ .Release.Name }}
         chart: {{ .Chart.Name }}
@@ -23,7 +23,7 @@ spec:
       restartPolicy: Never
       containers:
         - image: zengzhiyuan/users-service-migrations:{{ .Values.image.tag }}
-          name: "{{ .Chart.Name }}"-migrations
+          name: {{ .Chart.Name }}-migrations
           env:
             - name: DB_SERVER
               value: root-mysql
@@ -36,4 +36,6 @@ spec:
                   key: mysql-root-password
             - name: DB_NAME
               value: users
+            - name: REVISION
+              value: {{ .Values.db_revision }}
   {{ end }}
