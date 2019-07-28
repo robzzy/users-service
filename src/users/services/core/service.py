@@ -1,6 +1,8 @@
 import json
+from uuid import uuid4
 
 from nameko.rpc import rpc
+from nameko.events import EventDispatcher
 from nameko_tracer import Tracer
 from nameko_sqlalchemy import DatabaseSession
 from sqlalchemy_filters import apply_filters, apply_sort
@@ -17,6 +19,7 @@ class UsersService:
 
     tracer = Tracer()
     db = DatabaseSession(DeclarativeBase)
+    event_dispatcher = EventDispatcher()
 
     @http("GET", "/healthcheck")
     def health_check(self, request):
@@ -48,10 +51,21 @@ class UsersService:
 
         self.db.commit()
 
+        self.event_dispatcher(
+            "user_updated",
+            {
+                "uuid": user.uuid,
+                "data": data,
+            }
+        )
+
         return UserSchema().dump(user).data
 
     @rpc
     def create_user(self, data):
+
+        if not data.get("uuid"):
+            data["uuid"] = uuid4()
 
         user_data = UserSchema().load(data).data
 
@@ -59,6 +73,11 @@ class UsersService:
 
         self.db.add(user)
         self.db.commit()
+
+        self.event_dispatcher(
+            "user_created",
+            {"data": data}
+        )
 
         return UserSchema().dump(user).data
 
@@ -69,6 +88,11 @@ class UsersService:
 
         self.db.delete(user)
         self.db.commit()
+
+        self.event_dispatcher(
+            "user_deleted",
+            {"uuid": user.uuid},
+        )
 
     @rpc
     def list_users(self, filters=None, limit=None, offset=None, order_by=None):
