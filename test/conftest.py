@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+
 import pytest
 
 from users.models import Users, DeclarativeBase
@@ -17,7 +18,7 @@ def db_url():
         os.getenv("DB_USER", "root"),
         os.getenv("DB_PASS", ""),
         os.getenv("DB_SERVER", "localhost"),
-        os.getenv("DB_NAME", "demo"),
+        os.getenv("DB_NAME", "users_test"),
     )
 
 

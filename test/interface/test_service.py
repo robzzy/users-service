@@ -1,5 +1,6 @@
-import pytest
 
+import pytest
+from mock import call, patch
 from nameko.testing.services import worker_factory
 
 from users.services.core.service import UsersService
@@ -47,6 +48,14 @@ class TestUsersService:
         updated_user = db_session.query(Users).get(1)
 
         assert _user == UserSchema().dump(updated_user).data
+        assert users_service.event_dispatcher.call_args == call(
+            "user_updated", {
+                "uuid": "mock_uuid",
+                "data": {
+                    "email": "zzz@test.com",
+                }
+            }
+        )
 
     def test_update_user_not_found(self, users_service):
 
@@ -57,9 +66,21 @@ class TestUsersService:
 
         user_data = {"email": "1", "password": 1, "phone": "1"}
 
-        users_service.create_user(data=user_data)
+        with patch("users.services.core.service.uuid4") as uuid4:
+            uuid4.return_value = "mock_uuid"
+            users_service.create_user(data=user_data)
 
         assert len(db_session.query(Users).all()) == 1
+        assert users_service.event_dispatcher.call_args == call(
+            "user_created", {
+                "data": {
+                    "email": "1",
+                    "password": 1,
+                    "phone": "1",
+                    "uuid": "mock_uuid",
+                }
+            }
+        )
 
     def test_delete_user(self, users_service, created_user, db_session):
 
@@ -68,6 +89,9 @@ class TestUsersService:
         users_service.delete_user(1)
 
         assert len(db_session.query(Users).all()) == 0
+        assert users_service.event_dispatcher.call_args == call(
+            "user_deleted", {"uuid": "mock_uuid"}
+        )
 
     def test_list_users(self, users_service, db_session):
 

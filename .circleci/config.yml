@@ -6,7 +6,7 @@ jobs:
       - image: rabbitmq:3.7-management
       - image: circleci/mysql:5.6.36
         environment:
-          MYSQL_DATABASE: demo
+          MYSQL_DATABASE: users_test
 
     steps:
       - checkout
