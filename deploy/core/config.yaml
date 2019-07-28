@@ -36,3 +36,9 @@ LOGGING:
         level: INFO
         propagate: True
         handlers: [default]
+
+
+MAIL_HOST: ${MAIL_HOST:}
+EMAIL_USER: ${EMAIL_USER:}
+EMAIL_PASSWORD: ${EMAIL_PASSWORD:}
+EMAIL_SENDER: ${EMAIL_SENDER:}
