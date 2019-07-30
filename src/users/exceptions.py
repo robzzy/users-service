@@ -3,3 +3,7 @@
 
 class UserNotFound(Exception):
     pass
+
+
+class EmailSendError(Exception):
+    pass

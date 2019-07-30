@@ -10,7 +10,7 @@ setup(
     package_dir={"": "src"},
     install_requires=[
         "alembic==1.0.10",
-        "nameko==2.12.0",
+        "nameko==3.0.0-rc8",
         "nameko-sqlalchemy==1.5.0",
         "nameko-tracer==1.2.0",
         "mysql-connector-python==8.0.16",
