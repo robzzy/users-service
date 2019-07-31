@@ -14,7 +14,7 @@ setup(
         "nameko-sqlalchemy==1.5.0",
         "nameko-tracer==1.2.0",
         "mysql-connector-python==8.0.16",
-        "pyjwt==1.5.2",
+        "pyjwt==1.7.1",
         "marshmallow==2.19.5",
         "sqlalchemy_filters==0.10.0",
     ],

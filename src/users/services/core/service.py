@@ -11,12 +11,14 @@ from nameko.web.handlers import http
 from users.models import DeclarativeBase, Users
 from users.schemas import UserSchema
 from users.exceptions import UserNotFound
+from users.dependencies.auth import Auth, InvalidToken
 
 
 class UsersService:
 
     name = "users"
 
+    auth = Auth()
     tracer = Tracer()
     db = DatabaseSession(DeclarativeBase)
     event_dispatcher = EventDispatcher()
@@ -108,3 +110,21 @@ class UsersService:
         query = query.all()
 
         return UserSchema(many=True).dump(query).data
+
+    @rpc
+    def check_jwt(self):
+
+        try:
+            decoded_jwt = self.auth.decode_jwt()
+        except InvalidToken:
+            return None
+
+        try:
+            user = self.get_user(uuid=decoded_jwt["uuid"])
+        except UserNotFound:
+            return None
+
+        return self.auth.encode_jwt({
+            "uuid": user["uuid"],
+            "email": user["email"]
+        })

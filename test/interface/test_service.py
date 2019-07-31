@@ -7,6 +7,7 @@ from users.services.core.service import UsersService
 from users.exceptions import UserNotFound
 from users.models import Users
 from users.schemas import UserSchema
+from users.dependencies.auth import InvalidToken
 
 
 @pytest.fixture
@@ -119,6 +120,7 @@ class TestUsersService:
 
         assert users == [
             {
+                "uuid": "2",
                 "email": "demo2@test.com",
                 "phone": "mock_phone",
                 "password": "mock_password",
@@ -126,6 +128,7 @@ class TestUsersService:
                 "enabled": False
             },
             {
+                "uuid": "mock_uuid",
                 "email": "demo1@test.com",
                 "phone": "mock_phone",
                 "password": "mock_password",
@@ -133,3 +136,30 @@ class TestUsersService:
                 "enabled": False
             }
         ]
+
+    def test_check_jwt(self, users_service, created_user):
+
+        users_service.auth.decode_jwt.return_value = {
+            "uuid": "mock_uuid",
+        }
+        users_service.auth.encode_jwt.return_value = "token"
+
+        token = users_service.check_jwt()
+
+        assert token == "token"
+
+    def test_check_jwt_raise_invalid_token(self, users_service):
+        users_service.auth.decode_jwt.side_effect = InvalidToken()
+
+        token = users_service.check_jwt()
+
+        assert not token
+
+    def test_check_jwt_user_not_found(self, users_service):
+        users_service.auth.decode_jwt.return_value = {
+            "uuid": "mock_uuid",
+        }
+
+        token = users_service.check_jwt()
+
+        assert not token
