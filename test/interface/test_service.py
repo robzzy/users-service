@@ -28,9 +28,16 @@ class TestUsersService:
 
         assert response == '{"status": "ok"}'
 
-    def test_get_user(self, users_service, created_user):
+    def test_get_user_by_uuid(self, users_service, created_user):
 
         _user = users_service.get_user(uuid="mock_uuid")
+        _user.update({"id": 1, "uuid": "mock_uuid"})
+
+        assert created_user == _user
+
+    def test_get_user_by_email(self, users_service, created_user):
+
+        _user = users_service.get_user(uuid="not_exists", email="demo@test.com")
         _user.update({"id": 1, "uuid": "mock_uuid"})
 
         assert created_user == _user

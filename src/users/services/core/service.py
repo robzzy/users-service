@@ -28,10 +28,13 @@ class UsersService:
         return json.dumps({"status": "ok"})
 
     @rpc(expected_exceptions=(UserNotFound,))
-    def get_user(self, uuid):
+    def get_user(self, uuid=None, email=None):
         query = self.db.query(Users)
 
         user = query.filter(Users.uuid == uuid).first()
+
+        if not user:
+            user = query.filter(Users.email == email).first()
 
         if not user:
             raise UserNotFound(f"User do not exists.")
