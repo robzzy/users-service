@@ -26,5 +26,4 @@ WORKDIR /var/nameko
 
 EXPOSE 8000
 
-CMD . /appenv/bin/activate && \
-    nameko run --config config.yaml users.services.core.service:UsersService --backdoor 3000
+CMD . /appenv/bin/activate; nameko run --config config.yaml --backdoor 3000 users.services.core.service:UsersService
