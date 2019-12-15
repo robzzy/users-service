@@ -14,7 +14,7 @@ IMAGES := $(SERVICES) migrations
 CONTEXT ?= david.k8s.local
 NAMESPACE ?= demo
 SERVICE_NAME ?= users-service
-DOCKER_HOST ?= zengzhiyuan
+PROJECT_DOCKER_HOST ?= zengzhiyuan
 
 
 install-dependencies:
@@ -42,13 +42,13 @@ clean-source:
 docker-build-wheel: clean-source
 	docker create -v /application -v /wheelhouse --name source alpine:3.4
 	docker cp . source:/application
-	docker run --rm --volumes-from source $(DOCKER_HOST)/python-builder:latest;
+	docker run --rm --volumes-from source $(PROJECT_DOCKER_HOST)/python-builder:latest;
 	docker cp source:/wheelhouse .
 	docker rm source
 
 build-base: docker-build-wheel
-	docker pull $(DOCKER_HOST)/python-base:latest
-	docker tag $(DOCKER_HOST)/python-base:latest python-base:latest
+	docker pull $(PROJECT_DOCKER_HOST)/python-base:latest
+	docker tag $(PROJECT_DOCKER_HOST)/python-base:latest python-base:latest
 	docker build -t users-base .
 
 build: build-base
