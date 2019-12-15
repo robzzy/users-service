@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  service-orb: woshizzy/service-base@dev:ZZY-21
 jobs:
   test:
     docker:
@@ -80,14 +82,22 @@ workflows:
   version: 2
   all-workflows:
     jobs:
-      - test
+      - service-orb/test:
+          name: test
+          context: org-global
+          DB_NAME: users_test
       - docker_approval:
           type: approval
           requires:
             - test
-      - build_images:
+      - service-orb/build:
+          name: build_images
+          context: org-global
+          SERVICE_NAME: users-service
           requires:
             - docker_approval
-      - push_images:
+      - service-orb/push:
+          name: push_images
+          context: org-global
           requires:
             - build_images
