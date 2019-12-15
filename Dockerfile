@@ -1,26 +1,19 @@
-FROM python:3.7-slim-stretch as base
 
-RUN apt-get update && \
-    apt-get install --yes curl netcat
+FROM python-base:latest as base
 
-RUN pip install --upgrade pip && \
-    pip install virtualenv
+ADD wheelhouse /application/wheelhouse
 
-RUN virtualenv -p python3 /appenv
+WORKDIR /application
 
-ENV PATH=/appenv/bin:${PATH}
+RUN . /appenv/bin/activate; \
+    pip install --no-index -f wheelhouse users
 
-RUN groupadd -r nameko && useradd -r -g nameko nameko
+# -----
 
-RUN mkdir /var/nameko/ && chown -R nameko:nameko /var/nameko/
+FROM python-base:latest 
 
-# ------------------------------------------------------------
+COPY --from=base /appenv /appenv
 
-FROM service-base as builder
+WORKDIR /var/nameko
 
-RUN pip install auditwheel
-
-COPY . /application
-
-ENV PIP_WHEEL_DIR=/application/wheelhouse
-ENV PIP_FIND_LINKS=/application/wheelhouse
+EXPOSE 8000
