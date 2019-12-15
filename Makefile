@@ -14,6 +14,7 @@ IMAGES := $(SERVICES) migrations
 CONTEXT ?= david.k8s.local
 NAMESPACE ?= demo
 SERVICE_NAME ?= users-service
+PROJECT_DOCKER_HOST ?= zengzhiyuan
 
 
 install-dependencies:
@@ -38,18 +39,23 @@ coverage: test coverage-report coverage-html
 clean-source:
 	docker rm source || true
 
-docker-build-wheel:
-	docker 
+docker-build-wheel: clean-source
+	docker create -v /application -v /wheelhouse --name source alpine:3.4
+	docker cp . source:/application
+	docker run --rm --volumes-from source $(PROJECT_DOCKER_HOST)/python-builder:latest;
+	docker cp source:/wheelhouse .
+	docker rm source
 
-docker-login:
-	echo $$DOCKER_PASSWORD | docker login --username=$(DOCKER_USERNAME) --password-stdin
-
-build-base:
-	docker build --target base -t service-base .;
-	docker build --target builder -t service-builder .;
+build-base: docker-build-wheel
+	docker pull $(PROJECT_DOCKER_HOST)/python-base:latest
+	docker tag $(PROJECT_DOCKER_HOST)/python-base:latest python-base:latest
+	docker build -t users-base .
 
 build: build-base
 	for image in $(IMAGES) ; do TAG=$(TAG) make -C deploy/$$image build-image; done
+
+docker-login:
+	echo $$DOCKER_PASSWORD | docker login --username=$(DOCKER_USERNAME) --password-stdin
 
 docker-save:
 	mkdir -p docker-images

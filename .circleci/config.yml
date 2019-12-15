@@ -1,93 +1,26 @@
 version: 2.1
-jobs:
-  test:
-    docker:
-      - image: circleci/python:3.7.3-stretch
-      - image: rabbitmq:3.7-management
-      - image: circleci/mysql:5.6.36
-        environment:
-          MYSQL_DATABASE: users_test
-
-    steps:
-      - checkout
-
-      - run:
-          name: Install dependencies
-          command: |
-            sudo pip install -U pip wheel setuptools
-            sudo pip install -U -e ".[dev]"
-
-      - run:
-          name: Run tests
-          command: |
-            mkdir /tmp/coverage-hmtl
-            ARGS=--disable-warnings HTMLCOV_DIR=/tmp/coverage-html make coverage
-
-      - store_artifacts:
-          path: /tmp/coverage-html
-          destination: coverage-html
-
-      - run:
-          name: Export db_revision
-          command: |
-            mkdir ~/project/current-db
-            pushd deploy/migrations; echo $(alembic heads) | cut -d ' ' -f 1 > ~/project/current-db/db_revision.txt;popd
-
-      - persist_to_workspace:
-          root: current-db
-          paths:
-            - db_revision.txt
-  
-  build_images:
-    docker:
-      - image: circleci/python:3.7.3-stretch
-    
-    steps:
-      - checkout
-      - setup_remote_docker
-
-      - run:
-          name: Build docker images
-          command: |
-            make build docker-save
-      
-      - persist_to_workspace:
-          root: docker-images
-          paths:
-            - users-service.tar
-
-  push_images:
-    docker:
-      - image: circleci/python:3.7.3-stretch
-    
-    steps:
-      - checkout
-      - setup_remote_docker
-
-      - attach_workspace:
-          at: docker-images
-      
-      - run:
-          name: Push docker images
-          command: |
-            make docker-login
-            make docker-load
-            make docker-tag
-            make push-images
-
+orbs:
+  service-orb: woshizzy/service-base@volatile
 
 workflows:
-  version: 2
   all-workflows:
     jobs:
-      - test
+      - service-orb/test:
+          name: test
+          context: org-global
+          DB_NAME: users_test
       - docker_approval:
           type: approval
           requires:
             - test
-      - build_images:
+      - service-orb/build:
+          name: build_images
+          context: org-global
+          SERVICE_NAME: users-service
           requires:
             - docker_approval
-      - push_images:
+      - service-orb/push:
+          name: push_images
+          context: org-global
           requires:
             - build_images

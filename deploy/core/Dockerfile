@@ -1,29 +1,8 @@
-FROM service-builder AS wheels
+FROM users-base
 
-COPY . /application
-
-RUN cd /application && pip wheel .
-
-# ----------------------------------
-
-FROM service-base AS install
-
-COPY --from=wheels /application/wheelhouse /wheelhouse
-
-RUN pip install --no-index -f /wheelhouse users
-
-# ----------------------------------
-
-FROM service-base AS service
-
-COPY --from=install /appenv /appenv
+ENV WEB_SERVER_ADDRESS 0.0.0.:8000
 
 COPY config.yaml /var/nameko/config.yaml
 
-USER nameko
-
-WORKDIR /var/nameko
-
-EXPOSE 8000
-
-CMD . /appenv/bin/activate; nameko run --config config.yaml --backdoor-port 3000 users.services.core.service:UsersService
+CMD . /appenv/bin/activate; \
+    nameko run --config config.yaml --backdoor-port 3000 users.services.core.service:UsersService
