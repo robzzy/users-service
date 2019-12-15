@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  service-orb: woshizzy/service-base@dev:ZZY-21
+  service-orb: woshizzy/service-base@volatile
 
 workflows:
   all-workflows:
