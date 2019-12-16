@@ -1,6 +1,6 @@
 FROM users-base
 
-ENV WEB_SERVER_ADDRESS 0.0.0.:8000
+ENV WEB_SERVER_ADDRESS 0.0.0.0:8000
 
 COPY config.yaml /var/nameko/config.yaml
 
