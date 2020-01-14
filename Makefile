@@ -72,11 +72,6 @@ push-images:
 
 
 # k8s
-
-deploy-namespace:
-	kubectl --context=$(CONTEXT) apply -f deploy/k8s/namespace.yaml
-
-
 # helm
 
 test-chart:
