@@ -12,7 +12,7 @@ HTMLCOV_DIR ?= htmlcov
 IMAGES := $(SERVICES) migrations
 
 CONTEXT ?= david.k8s.local
-NAMESPACE ?= demo
+NAMESPACE ?= default 
 SERVICE_NAME ?= users-service
 PROJECT_DOCKER_HOST ?= zengzhiyuan
 
@@ -72,11 +72,6 @@ push-images:
 
 
 # k8s
-
-deploy-namespace:
-	kubectl --context=$(CONTEXT) apply -f deploy/k8s/namespace.yaml
-
-
 # helm
 
 test-chart:

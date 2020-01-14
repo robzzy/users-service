@@ -20,19 +20,10 @@ spec:
       containers:
         - image: zengzhiyuan/users-service-core:{{ .Values.image.tag }}
           name: {{ .Chart.Name }}
-          env:
-            - name: RABBIT_USER
-              value: guest
-            - name: RABBIT_SERVER
-              value: rabbitmq
-            - name: RABBIT_PORT
-              value: "5672"
-            - name: RABBIT_PASS
-              value: guest
-            - name: DB_SERVER
-              value: mysql
-            - name: DB_USER
-              value: root
-            - name: DB_NAME
-              value: users
-              
+          envFrom:
+            - configMapRef:
+                name: common-rabbit
+            - configMapRef:
+                name: common-mysql
+            - secretRef:
+                name: common

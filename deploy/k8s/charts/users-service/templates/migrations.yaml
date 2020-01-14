@@ -24,16 +24,14 @@ spec:
       containers:
         - image: zengzhiyuan/users-service-migrations:{{ .Values.image.tag }}
           name: {{ .Chart.Name }}-migrations
+          envFrom:
+            - configMapRef:
+                name: common-rabbit
+            - configMapRef:
+                name: common-mysql
+            - secretRef:
+                name: common
           env:
-            - name: DB_SERVER
-              value: root-mysql
-            - name: DB_USER
-              value: root
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: root-mysql
-                  key: mysql-root-password
             - name: DB_NAME
               value: users
             - name: REVISION
