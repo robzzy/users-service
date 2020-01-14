@@ -12,7 +12,7 @@ HTMLCOV_DIR ?= htmlcov
 IMAGES := $(SERVICES) migrations
 
 CONTEXT ?= david.k8s.local
-NAMESPACE ?= demo
+NAMESPACE ?= default 
 SERVICE_NAME ?= users-service
 PROJECT_DOCKER_HOST ?= zengzhiyuan
 
