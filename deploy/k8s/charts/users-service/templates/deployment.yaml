@@ -16,10 +16,12 @@ spec:
       labels:
         app: {{ .Chart.Name }}
     spec:
-      restartPolicy: Always
       containers:
-        - image: zengzhiyuan/users-service-core:{{ .Values.image.tag }}
-          name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}
+          image: zengzhiyuan/users-service-core:{{ .Values.image.tag }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
           envFrom:
             - configMapRef:
                 name: common-rabbit
