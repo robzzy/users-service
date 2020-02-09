@@ -11,21 +11,23 @@ spec:
   selector:
     matchLabels:
       app: {{ .Chart.Name }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app: {{ .Chart.Name }}
+        release: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
           image: zengzhiyuan/users-service-core:{{ .Values.image.tag }}
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8000
+            - name: external
+              containerPort: 8000
+              protocl: TCP
           envFrom:
             - configMapRef:
-                name: common-rabbit
-            - configMapRef:
-                name: common-mysql
+                name: common
             - secretRef:
                 name: common
