@@ -22,9 +22,11 @@ class Users(DeclarativeBase):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
+    uuid = Column(String(36), nullable=False, unique=True, default=str(uuid4()))
+    name = Column(String(32), nullable=False)
     email = Column(String(64), nullable=True)
     phone = Column(String(32), nullable=True)
     password = Column(String(64), nullable=True)
-    email_verified = Column(Boolean, nullable=False, default=False)
-    uuid = Column(String(36), nullable=False, unique=True, default=str(uuid4()))
-    enabled = Column(Boolean, nullable=False, default=False)
+    first_name = Column(String(32), nullable=True)
+    last_name = Column(String(32), nullable=True)
+    enabled = Column(Boolean, default=False)
