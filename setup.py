@@ -13,10 +13,10 @@ setup(
         "nameko==3.0.0-rc8",
         "nameko-sqlalchemy==1.5.0",
         "nameko-tracer==1.2.0",
+        "nameko-autocrud==0.2.0",
         "mysql-connector-python==8.0.16",
         "pyjwt==1.7.1",
         "marshmallow==2.19.5",
-        "sqlalchemy_filters==0.10.0",
     ],
     extras_require={
         "dev": [
@@ -24,6 +24,7 @@ setup(
             "flake8>=3.7.7",
             "pytest==4.5.0",
             "behave==1.2.5",
+            "black==19.10b0",
         ],
     },
     zip_safe=True
