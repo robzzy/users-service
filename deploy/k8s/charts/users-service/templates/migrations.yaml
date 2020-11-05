@@ -10,7 +10,7 @@ metadata:
     name: {{ .Release.Name }}-migrations-job
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade,post-rollback
-    "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+    "helm.sh/hook-delete-policy": hook-succeeded,before-hook-creation
 spec:
   template:
     metadata:
