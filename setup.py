@@ -15,7 +15,7 @@ setup(
         "nameko-tracer==1.2.0",
         "nameko-autocrud==0.2.0",
         "mysql-connector-python==8.0.16",
-        "pyjwt==1.7.1",
+        "pyjwt==2.4.0",
         "marshmallow==2.19.5",
     ],
     extras_require={
